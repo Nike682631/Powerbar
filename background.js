@@ -6,11 +6,15 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.commands.onCommand.addListener(function (command) {
-  if (command === "popup-powerbar") {
-    chrome.scripting.executeScript({
-      injection: 'content-script.js'
-    })
-  } else if (command === "random") {
-      alert("random");
-  }
+  chrome.tabs.query({ active: true }, function (tabs) {
+    if (command === "popup-powerbar") {
+      let tab = tabs[0];
+      chrome.scripting.executeScript({ 
+        target: { tabId: tab.id },
+        files: ["content-script.js"] 
+      })
+    } else if (command === "random") {
+        alert("random");
+    }
+  })
 });
